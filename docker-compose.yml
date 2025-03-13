@@ -1,0 +1,44 @@
+version: '3.8'
+
+networks:
+  carrito_net:
+    name: carrito_net
+
+services:
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./ApiGateway
+      dockerfile: Dockerfile
+    ports:
+      - "5001:8080"
+    depends_on:
+      - productos
+      - carrito
+      - usuarios
+    networks:
+      - carrito_net
+
+  productos:
+    container_name: productos
+    build:
+      context: ./MicroservicioProductos
+      dockerfile: Dockerfile
+    networks:
+      - carrito_net
+
+  carrito:
+    container_name: carrito
+    build:
+      context: ./MicroservicioCarrito
+      dockerfile: Dockerfile
+    networks:
+      - carrito_net
+
+  usuarios:
+    container_name: usuarios
+    build:
+      context: ./MicroservicioUsuarios
+      dockerfile: Dockerfile
+    networks:
+      - carrito_net
